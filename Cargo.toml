@@ -1,0 +1,20 @@
+[package]
+name = "hosted_vcs"
+version = "0.0.1"
+authors = ["Livio Ribeiro <livioribeiro@outlook.com>"]
+build = "build.rs"
+license = "MIT"
+
+[dependencies]
+hyper = "0.6"
+serde = "0.6"
+serde_json = "0.6"
+lazy_static = "0.1"
+chrono = "0.2"
+
+[build-dependencies]
+serde_codegen = "0.6"
+syntex = "0.17"
+
+[dev-dependencies]
+rpassword = "0.1"
