@@ -10,7 +10,7 @@ fn main() {
     io::stdout().flush().expect("Cannot flush output");
     let token = read_password().expect("Cannot read token");
 
-    let gh = github::api::token_login(token).unwrap();
+    let gh = github::login_token(token).unwrap();
     println!("{:?}", gh.current_user().unwrap());
     println!("{}", gh.octocat().unwrap());
 }

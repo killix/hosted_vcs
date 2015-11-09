@@ -18,7 +18,7 @@ fn main() {
     output.flush().expect("Cannot flush output");
     let password = read_password().expect("Cannot read password");
 
-    let gh = github::api::password_login(username, password).unwrap();
+    let gh = github::login_password(username, password).unwrap();
     println!("{:?}", gh.current_user().unwrap());
     println!("{}", gh.octocat().unwrap());
 }
