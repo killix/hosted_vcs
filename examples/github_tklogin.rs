@@ -10,7 +10,12 @@ fn main() {
     io::stdout().flush().expect("Cannot flush output");
     let token = read_password().expect("Cannot read token");
 
-    let gh = github::login_token(token).unwrap();
-    println!("{:?}", gh.current_user().unwrap());
-    println!("{}", gh.octocat().unwrap());
+    let session = github::login_token(token).unwrap();
+    println!("{:?}", session.current_user().unwrap());
+    println!("{}", session.octocat().unwrap());
+    
+    println!("Rate Limit:");
+    println!("  Limit: {}", session.ratelimit_limit());
+    println!("  Remaining: {}", session.ratelimit_remaining());
+    println!("  Reset: {}", session.ratelimit_reset());
 }

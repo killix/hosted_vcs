@@ -18,7 +18,12 @@ fn main() {
     output.flush().expect("Cannot flush output");
     let password = read_password().expect("Cannot read password");
 
-    let gh = github::login_password(username, password).unwrap();
-    println!("{:?}", gh.current_user().unwrap());
-    println!("{}", gh.octocat().unwrap());
+    let session = github::login_password(username, password).unwrap();
+    println!("{:?}", session.current_user().unwrap());
+    println!("{}", session.octocat().unwrap());
+
+    println!("Rate Limit:");
+    println!("  Limit: {}", session.ratelimit_limit());
+    println!("  Remaining: {}", session.ratelimit_remaining());
+    println!("  Reset: {}", session.ratelimit_reset());
 }
