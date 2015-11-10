@@ -1,7 +1,7 @@
 extern crate hosted_vcs;
 
 use std::env;
-use hosted_vcs::github;
+use hosted_vcs::github::v3 as github;
 
 fn main() {
     let session = github::anonymous_session().unwrap();

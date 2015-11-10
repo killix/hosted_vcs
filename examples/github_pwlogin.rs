@@ -3,7 +3,7 @@ extern crate rpassword;
 
 use std::io::{self, Write};
 use rpassword::read_password;
-use hosted_vcs::github;
+use hosted_vcs::github::v3 as github;
 
 fn main() {
     let mut output = io::stdout();
