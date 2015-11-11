@@ -19,7 +19,7 @@ use hyper::header::{
     UserAgent
 };
 use hyper::mime::Mime;
-use serde_json;
+use rustc_serialize::json;
 
 use super::error::GithubError;
 use super::model::Root;
@@ -45,7 +45,10 @@ pub fn anonymous() -> Result<Session<Anonymous>, Box<Error>> {
     let client = Client::new();
     let mut res = try!(client.get(GITHUB_URI).headers(headers.clone()).send());
 
-    let root: Root = try!(serde_json::from_reader(&mut res));
+    let mut buf = String::new();
+    try!(res.read_to_string(&mut buf));
+    let root: Root = try!(json::decode(&buf));
+    
     let ratelimit = try!(RateLimit::parse(&res.headers));
 
     Ok(Session::<Anonymous> {
@@ -67,7 +70,10 @@ fn login(mut headers: Headers) -> Result<Session<Authenticated>, Box<Error>> {
     let client = Client::new();
     let mut res = try!(client.get(GITHUB_URI).headers(headers.clone()).send());
 
-    let root: Root = try!(serde_json::from_reader(&mut res));
+    let mut buf = String::new();
+    try!(res.read_to_string(&mut buf));
+    let root: Root = try!(json::decode(&buf));
+
     let ratelimit = try!(RateLimit::parse(&res.headers));
 
     Ok(Session {

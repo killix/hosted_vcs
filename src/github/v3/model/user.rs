@@ -1,7 +1,10 @@
+use std::convert::From;
+use std::error::Error;
 use chrono::{DateTime, UTC};
+use rustc_serialize::json;
 
 #[allow(dead_code)]
-#[derive(Deserialize, Debug)]
+#[derive(RustcDecodable, Debug)]
 pub struct User {
   pub login: String,
   pub id: u64,
@@ -18,7 +21,6 @@ pub struct User {
   pub repos_url: String,
   pub events_url: String,
   pub received_events_url: String,
-  #[serde(rename="type")]
   pub type_: String,
   pub site_admin: bool,
   pub name: String,
@@ -32,8 +34,8 @@ pub struct User {
   pub public_gists: u32,
   pub followers: u32,
   pub following: u32,
-  created_at: String,
-  updated_at: String,
+  pub created_at: String,
+  pub updated_at: String,
   pub private_gists: Option<u32>,
   pub total_private_repos: Option<u32>,
   pub owned_private_repos: Option<u32>,
@@ -43,6 +45,11 @@ pub struct User {
 }
 
 impl User {
+    pub fn decode(json_str: &str) -> Result<User, Box<Error>> {
+        let json_str = json_str.replace("\"type\":", "\"type_\":");
+        json::decode(&json_str).map_err(From::from)
+    }
+
     pub fn created_at(&self) -> DateTime<UTC> {
         self.created_at.parse().unwrap()
     }
@@ -53,10 +60,10 @@ impl User {
 }
 
 #[allow(dead_code)]
-#[derive(Deserialize, Debug)]
+#[derive(RustcDecodable, Debug)]
 pub struct UserPlan {
-    name: String,
-    space: u64,
-    collaborators: u32,
-    private_repos: u32,
+    pub name: String,
+    pub space: u64,
+    pub collaborators: u32,
+    pub private_repos: u32,
 }

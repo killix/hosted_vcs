@@ -1,5 +1,7 @@
+use std::convert::From;
 use std::error::Error;
-use serde_json;
+use std::io::Read;
+use rustc_serialize::json;
 
 use super::super::model::{User, Organization, Repository};
 use super::*;
@@ -9,8 +11,9 @@ impl Session<Authenticated> {
         let request = self.client.get(&self.github.current_user_url);
         let mut response = try!(self.send_request(request, None));
 
-        let user: User = try!(serde_json::from_reader(&mut response));
-        Ok(user)
+        let mut buf = String::new();
+        try!(response.read_to_string(&mut buf));
+        User::decode(&buf).map_err(From::from)
     }
 
     pub fn get_user(&self, user: &str) -> Result<User, Box<Error>> {
@@ -18,8 +21,9 @@ impl Session<Authenticated> {
         let request = self.client.get(&url);
         let mut response = try!(self.send_request(request, None));
 
-        let user: User = try!(serde_json::from_reader(&mut response));
-        Ok(user)
+        let mut buf = String::new();
+        try!(response.read_to_string(&mut buf));
+        User::decode(&buf).map_err(From::from)
     }
 
     pub fn get_organization(&self, org: &str) -> Result<Organization, Box<Error>> {
@@ -27,8 +31,9 @@ impl Session<Authenticated> {
         let request = self.client.get(&url);
         let mut response = try!(self.send_request(request, None));
 
-        let org: Organization = try!(serde_json::from_reader(&mut response));
-        Ok(org)
+        let mut buf = String::new();
+        try!(response.read_to_string(&mut buf));
+        Organization::decode(&buf).map_err(From::from)
     }
 
     pub fn get_repository(&self, owner: &str, repo: &str) -> Result<Repository, Box<Error>> {
@@ -36,7 +41,10 @@ impl Session<Authenticated> {
         let request = self.client.get(&url);
         let mut response = try!(self.send_request(request, None));
 
-        let repo: Repository = try!(serde_json::from_reader(&mut response));
+        let mut buf = String::new();
+        try!(response.read_to_string(&mut buf));
+        let repo: Repository = try!(json::decode(&buf));
+
         Ok(repo)
     }
 }

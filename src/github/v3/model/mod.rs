@@ -40,7 +40,7 @@ pub use self::repository::{Repository, RepositoryPermissions};
 // }
 
 #[allow(dead_code)]
-#[derive(Deserialize, Debug)]
+#[derive(RustcDecodable, Debug)]
 pub struct Root {
     pub current_user_url: String,
     pub current_user_authorizations_html_url: String,
