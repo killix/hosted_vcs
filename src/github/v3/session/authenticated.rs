@@ -1,7 +1,6 @@
 use std::convert::From;
 use std::error::Error;
 use std::io::Read;
-use rustc_serialize::json;
 
 use super::super::model::{User, Organization, Repository};
 use super::*;
@@ -43,8 +42,6 @@ impl Session<Authenticated> {
 
         let mut buf = String::new();
         try!(response.read_to_string(&mut buf));
-        let repo: Repository = try!(json::decode(&buf));
-
-        Ok(repo)
+        Repository::decode(&buf).map_err(From::from)
     }
 }
